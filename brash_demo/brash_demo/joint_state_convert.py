@@ -10,8 +10,10 @@ class JointStateConverter(Node):
 
     def __init__(self):
         super().__init__('joint_state_convert')
+
+        self.topic_name = '/groundsystem/robot_sim_cmd'
         self.js_publisher = self.create_publisher(JointState, 'joint_states', 10)
-        self.jc_publisher = self.create_publisher(RobotSimJointCmdt, '/groundsystem/robot_sim_cmd', 10)
+        self.jc_publisher = self.create_publisher(RobotSimJointCmdt, self.topic_name, 10)
         self.js_subscription = self.create_subscription(
             RobotSimHkTlmt,
             '/groundsystem/robot_sim_hk_tlm',
@@ -77,7 +79,7 @@ def main(args=None):
     jsc = JointStateConverter()
     rclpy.spin(jsc)
 
-    bridge.destroy_node()
+    jsc.destroy_node()
     rclpy.shutdown()
 
 
