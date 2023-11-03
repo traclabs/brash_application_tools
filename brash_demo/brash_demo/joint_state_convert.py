@@ -7,7 +7,12 @@ from cfe_msgs.msg import RobotSimJointCmdt
 
 
 class JointStateConverter(Node):
-
+    """
+    This class receives the joint states from topic /groundsystem/robot_sim/hk_tlm
+    (cfe_msgs) and publishes them to /joint_states
+    This class also subscribes to "/joint_command", and publishes the said command
+    to /ground_system/robot_sim_cmd (cfe_msgs)
+    """
     def __init__(self):
         super().__init__('joint_state_convert')
 
@@ -30,7 +35,7 @@ class JointStateConverter(Node):
         self.jc_subscription  # prevent unused variable warning
 
     def cfs_callback(self, msg):
-        self.get_logger().info('got new cFS joint telemetry')
+        self.get_logger().info('Received new cFS joint telemetry')
         # self.get_logger().info(str(msg))
         # print(msg)
         js = JointState()
@@ -56,7 +61,7 @@ class JointStateConverter(Node):
         self.js_publisher.publish(js)
 
     def jc_callback(self, msg):
-        self.get_logger().info('got new cFS joint command')
+        self.get_logger().info('Received new cFS joint command')
         # self.get_logger().info(str(msg))
 
         cmd = RobotSimJointCmdt()
