@@ -16,6 +16,13 @@ class JointStateConverter(Node):
     def __init__(self):
         super().__init__('joint_state_convert')
 
+
+        self.declare_parameter('joint_names',  ["joint0", "joint1", "joint2", "joint3", "joint4", "joint5", "joint6"])
+        self.joint_names = self.get_parameter('joint_names').value
+        if len(self.joint_names) != 7:
+          self.get_logger().error('Joint names should be of size 7')
+          rclpy.shutdown()
+
         self.topic_name = '/groundsystem/robot_sim_cmd'
         self.js_publisher = self.create_publisher(JointState, 'joint_states', 10)
         self.jc_publisher = self.create_publisher(RobotSimJointCmdt, self.topic_name, 10)
@@ -34,6 +41,7 @@ class JointStateConverter(Node):
         self.js_subscription  # prevent unused variable warning
         self.jc_subscription  # prevent unused variable warning
 
+
     def cfs_callback(self, msg):
         self.get_logger().info('Received new cFS joint telemetry')
         # self.get_logger().info(str(msg))
@@ -41,13 +49,9 @@ class JointStateConverter(Node):
         js = JointState()
         js.header.stamp = self.get_clock().now().to_msg()
         # js.header.frame_id = "iss"
-        js.name.append("joint0")
-        js.name.append("joint1")
-        js.name.append("joint2")
-        js.name.append("joint3")
-        js.name.append("joint4")
-        js.name.append("joint5")
-        js.name.append("joint6")
+
+        js.name = self.joint_names
+
         js.position.append(msg.payload.state.joint0)
         js.position.append(msg.payload.state.joint1)
         js.position.append(msg.payload.state.joint2)
