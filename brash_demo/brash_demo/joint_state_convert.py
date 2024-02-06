@@ -43,7 +43,7 @@ class JointStateConverter(Node):
 
 
     def cfs_callback(self, msg):
-        self.get_logger().info('Received new cFS joint telemetry')
+        self.get_logger().info('Received new cFS joint telemetry', throttle_duration_sec=1.0)
         # self.get_logger().info(str(msg))
         # print(msg)
         js = JointState()
@@ -65,7 +65,7 @@ class JointStateConverter(Node):
         self.js_publisher.publish(js)
 
     def jc_callback(self, msg):
-        self.get_logger().info('Received new cFS joint command')
+        self.get_logger().info('Received new cFS joint command', throttle_duration_sec=1.0)
         # self.get_logger().info(str(msg))
 
         cmd = RobotSimJointCmdt()
