@@ -7,9 +7,21 @@ from cfe_msgs.msg import RobotSimJointCmdt
 
 
 class JointStateConverter(Node):
-
+    """
+    This class receives the joint states from topic /groundsystem/robot_sim/hk_tlm
+    (cfe_msgs) and publishes them to /joint_states
+    This class also subscribes to "/joint_command", and publishes the said command
+    to /ground_system/robot_sim_cmd (cfe_msgs)
+    """
     def __init__(self):
         super().__init__('joint_state_convert')
+
+
+        self.declare_parameter('joint_names',  ["joint0", "joint1", "joint2", "joint3", "joint4", "joint5", "joint6"])
+        self.joint_names = self.get_parameter('joint_names').value
+        if len(self.joint_names) != 7:
+          self.get_logger().error('Joint names should be of size 7')
+          rclpy.shutdown()
 
         self.topic_name = '/groundsystem/robot_sim_cmd'
         self.js_publisher = self.create_publisher(JointState, 'joint_states', 10)
@@ -29,20 +41,17 @@ class JointStateConverter(Node):
         self.js_subscription  # prevent unused variable warning
         self.jc_subscription  # prevent unused variable warning
 
+
     def cfs_callback(self, msg):
-        self.get_logger().info('got new cFS joint telemetry')
+        self.get_logger().info('Received new cFS joint telemetry', throttle_duration_sec=1.0)
         # self.get_logger().info(str(msg))
         # print(msg)
         js = JointState()
         js.header.stamp = self.get_clock().now().to_msg()
         # js.header.frame_id = "iss"
-        js.name.append("joint0")
-        js.name.append("joint1")
-        js.name.append("joint2")
-        js.name.append("joint3")
-        js.name.append("joint4")
-        js.name.append("joint5")
-        js.name.append("joint6")
+
+        js.name = self.joint_names
+
         js.position.append(msg.payload.state.joint0)
         js.position.append(msg.payload.state.joint1)
         js.position.append(msg.payload.state.joint2)
@@ -56,7 +65,7 @@ class JointStateConverter(Node):
         self.js_publisher.publish(js)
 
     def jc_callback(self, msg):
-        self.get_logger().info('got new cFS joint command')
+        self.get_logger().info('Received new cFS joint command', throttle_duration_sec=1.0)
         # self.get_logger().info(str(msg))
 
         cmd = RobotSimJointCmdt()
