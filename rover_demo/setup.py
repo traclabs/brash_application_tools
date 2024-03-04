@@ -25,7 +25,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
             'console_scripts': [
-                    'twist_odom_convert = rover_demo.twist_odom_convert:main'
+                    'ground_twist_odom_convert = rover_demo.ground_twist_odom_convert:main',
+                    'flight_twist_odom_convert = rover_demo.flight_twist_odom_convert:main'                    
             ],
     },
 )

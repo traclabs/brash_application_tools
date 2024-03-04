@@ -58,13 +58,13 @@ class TwistOdomConverter(Node):
         odom.header.stamp = self.get_clock().now().to_msg()
         odom.header.frame_id = "world"
         odom.child_frame_id = "rover"
-        odom.pose.pose.position.x = msg.payload.state.pose_x
-        odom.pose.pose.position.y = msg.payload.state.pose_y
-        odom.pose.pose.position.z = msg.payload.state.pose_z
-        odom.pose.pose.orientation.x = msg.payload.state.pose_qx
-        odom.pose.pose.orientation.y = msg.payload.state.pose_qy
-        odom.pose.pose.orientation.z = msg.payload.state.pose_qz
-        odom.pose.pose.orientation.w = msg.payload.state.pose_qw                        
+        odom.pose.pose.position.x = msg.payload.state.pose.x
+        odom.pose.pose.position.y = msg.payload.state.pose.y
+        odom.pose.pose.position.z = msg.payload.state.pose.z
+        odom.pose.pose.orientation.x = msg.payload.state.pose.qx
+        odom.pose.pose.orientation.y = msg.payload.state.pose.qy
+        odom.pose.pose.orientation.z = msg.payload.state.pose.qz
+        odom.pose.pose.orientation.w = msg.payload.state.pose.qw                        
 
         self.odom_publisher.publish(odom)
 

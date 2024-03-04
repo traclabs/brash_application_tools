@@ -8,14 +8,14 @@ def generate_launch_description():
 
   toc_convert = Node(
           package='rover_demo',
-          executable='twist_odom_convert',
-          name='twist_odom_convert',
+          executable='flight_twist_odom_convert',
+          name='flight_twist_odom_convert',
           output='screen',
           parameters=[
-            {"twist_cmd_cfs": "rover_app_cmd"},
-            {"odom_tlm_cfs": "rover_app_hk_tlm"},
-            {"odom_out": "/odom"},
-            {"twist_in": "/cmd_vel"} 
+            {"twist_out_cfs": "rover_app_send_robot_command"},
+            {"odom_in_cfs": "rover_app_get_robot_odom"},
+            {"odom_in": "/w200_0000/platform/odom"},
+            {"twist_out": "/w200_0000/cmd_vel"} 
           ]) 
           
   return LaunchDescription(
