@@ -17,7 +17,7 @@ def generate_launch_description():
     gazebo_sim_launch = PathJoinSubstitution(
         [get_package_share_directory("rover_demo"), 'launch', 'flight_husky_simulation.launch.py'])
     twist_odom_convert_launch = PathJoinSubstitution(
-        [get_package_share_directory("rover_demo"), 'launch', 'flight_twist_odom_convert_husky.launch.py'])
+        [get_package_share_directory("rover_demo"), 'launch', 'flight_twist_odom_convert.launch.py'])
 
         
     gazebo_sim = IncludeLaunchDescription(
@@ -25,7 +25,11 @@ def generate_launch_description():
     )
 
     twist_odom_convert = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([twist_odom_convert_launch])
+        PythonLaunchDescriptionSource([twist_odom_convert_launch]),
+        launch_arguments = {
+          'odom_in': '/w200_0000/platform/odom',
+          'twist_out': '/w200_0000/cmd_vel'          
+        }.items(),
     )
 
 
