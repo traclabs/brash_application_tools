@@ -31,9 +31,16 @@ def generate_launch_description():
 
   # Start the twist_odom_converter
   launch_to_converter = IncludeLaunchDescription(
-      PythonLaunchDescriptionSource(PathJoinSubstitution(
-          [FindPackageShare('rover_demo'), 
-              'launch', 'ground_twist_odom_convert_husky.launch.py']))
+      PythonLaunchDescriptionSource([
+          PathJoinSubstitution([
+              FindPackageShare('rover_demo'), 
+              'launch', 'ground_twist_odom_convert.launch.py'
+          ])
+      ]),
+      launch_arguments = {
+            'odom_out': '/odom',
+            'twist_in': '/cmd_vel'          
+      }.items(),              
   )
   
 
