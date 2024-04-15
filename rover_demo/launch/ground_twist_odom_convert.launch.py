@@ -2,7 +2,8 @@ import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
-
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 
 ARGUMENTS = [
     DeclareLaunchArgument('twist_cmd_cfs', default_value='rover_app_cmd',
@@ -24,10 +25,10 @@ def generate_launch_description():
           name='ground_twist_odom_convert',
           output='screen',
           parameters=[
-            {"twist_cmd_cfs": LaunchConfiguration(twist_cmd_cfs),
-            {"odom_tlm_cfs": LaunchConfiguration(odom_tlm_cfs)},
-            {"odom_out": LaunchConfiguration(odom_out)},
-            {"twist_in": LaunchConfiguration(twist_in)} 
+            {"twist_cmd_cfs": LaunchConfiguration("twist_cmd_cfs")},
+            {"odom_tlm_cfs": LaunchConfiguration("odom_tlm_cfs")},
+            {"odom_out": LaunchConfiguration("odom_out")},
+            {"twist_in": LaunchConfiguration("twist_in")} 
           ]) 
           
   ld = LaunchDescription(ARGUMENTS)
