@@ -13,7 +13,7 @@ def generate_launch_description():
 
   # rqt node
   rqt_node = ExecuteProcess(
-    cmd = ['rqt', '--perspective-file', os.path.join(get_package_share_directory("brash_application_tools"), "config", "tracarm", "robot_sim_tracarm.perspective")],
+    cmd = ['rqt', '--perspective-file', os.path.join(get_package_share_directory("brash_application_tools"), "config", "tracarm", "robot_sim_tracarm_groundsystem.perspective")],
     shell = True
     )
 
