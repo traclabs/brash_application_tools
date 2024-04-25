@@ -8,6 +8,7 @@ from control_msgs.msg import JointTolerance
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 
+from cfe_msgs.msg import CanadarmAppRobotStatet, CanadarmAppRobotCommandt
 
 class SendMotionCommand(Node):
     """
@@ -16,11 +17,29 @@ class SendMotionCommand(Node):
     def __init__(self):
         super().__init__('send_motion_command')
         self._action_client = ActionClient(self, FollowJointTrajectory, '/canadarm_joint_trajectory_controller/follow_joint_trajectory')
-        self._joint_names = ["Base_Joint", "Shoulder_Roll", "Shoulder_Yaw", "Elbow_Pitch", "Wrist_Pitch", "Wrist_Yaw", "Wrist_Roll"]
+        self._publish_state = self.create_publisher(CanadarmAppRobotStatet, "/flightsystem/canadarm_app_robot_state", 10)
 
-    # 0: open 1: close 2: random
-    def send_goal(self, mode):
-        self.get_logger().info("Send goal start ...")
+        self._subscribe_command = self.create_subscription(CanadarmAppRobotCommandt, "/flightsystem/canadarm_app_robot_command", self.command_cb, 10)
+        self._subscribe_js = self.create_subscription(JointState, "/joint_states", self.js_cb, 10)
+        
+        self._joint_names = ["Base_Joint", "Shoulder_Roll", "Shoulder_Yaw", "Elbow_Pitch", "Wrist_Pitch", "Wrist_Yaw", "Wrist_Roll"]
+        self._js = [0, 0, 0, 0, 0, 0, 0]
+        self._is_robot_moving = False
+
+    def js_cb(self, msg):
+        self._js = msg.position
+        
+        st = CanadarmAppRobotStatet()
+        st.cmd_header.sec.function_code = 1
+        st.state.joints = self._js
+        st.state.is_robot_moving = self._is_robot_moving
+        self._publish_state(st)
+
+    def command_cb(self, msg):
+        self.get_logger().info('Got command: "%s"' % msg.data)
+        send_goal(msg.goal.joints)
+
+    def send_goal(self, joint_values):
     
         goal_msg = FollowJointTrajectory.Goal()
         
@@ -28,14 +47,8 @@ class SendMotionCommand(Node):
         traj.joint_names = self._joint_names
 
         point = JointTrajectoryPoint()
-        
-        if mode == 0:
-          point.positions = [0.0, 0.0, 0.0, -3.1416, 0.0, 0.0, 0.0]
-        elif mode == 1:
-          point.positions =  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        elif mode == 2:
-          point.positions = [1.0, -1.5, 2.0, -3.2, 0.8, 0.5, -1.0]  
-          
+        point.positions = joint_values
+                  
         #point.velocities = []
         #point.accelerations = []
         point.time_from_start = Duration(seconds=90.0).to_msg()  
@@ -46,10 +59,10 @@ class SendMotionCommand(Node):
         
         goal_msg.trajectory = traj
         self._action_client.wait_for_server()
-        self.get_logger().info('Sending goal now for real!')
 
         self._send_goal_future = self._action_client.send_goal_async(goal_msg, feedback_callback = self.feedback_callback )
         self._send_goal_future.add_done_callback(self.goal_response_callback)
+        self._is_robot_moving = True
 
     def goal_response_callback(self, future):
         goal_handle = future.result()
@@ -65,6 +78,7 @@ class SendMotionCommand(Node):
     def get_result_callback(self, future):
         result = future.result().result
         self.get_logger().info('Result: {0}'.format(result.error_string))
+        self._is_robot_moving = False
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
@@ -88,9 +102,7 @@ def main(args=None):
  
     action_client = SendMotionCommand()
     action_client.send_goal(0)
-    action_client.get_logger().info("Start spinning")
     rclpy.spin(action_client)
-    action_client.get_logger().info("End spinning")
     
 if __name__ == '__main__':
     main()
