@@ -32,22 +32,26 @@ class SendMotionCommand(Node):
         for item in msg.position:
           self._js.append(float(item))
     
-        print("Js:")
         print(self._js)
         st = CanadarmAppRobotStatet()
         st.cmd_header.sec.function_code = 1
-        st.state.joints = self._js
+        st.state.joint_0 = self._js[0]
+        st.state.joint_1 = self._js[1]
+        st.state.joint_2 = self._js[2]
+        st.state.joint_3 = self._js[3]
+        st.state.joint_4 = self._js[4]
+        st.state.joint_5 = self._js[5]
+        st.state.joint_6 = self._js[6]
         st.is_robot_moving = self._is_robot_moving
         self._publish_state.publish(st)
 
     def command_cb(self, msg):
-        self.get_logger().info("Got command for canadarm in flight side!!!!!!!!!!!!!!!!!!!!")
-        send_goal(msg.goal.joints)
+        self.get_logger().info("Got command for canadarm in flight side!")
+        joints = [msg.goal.joint_0, msg.goal.joint_1, msg.goal.joint_2, msg.goal.joint_3, msg.goal.joint_4, msg.goal.joint_5, msg.goal.joint_6]
+        self.send_goal(joints)
 
     def send_goal(self, joint_values):
-        print("Joint values:")
         print(joint_values)
-        print("Good..")   
         goal_msg = FollowJointTrajectory.Goal()
         
         traj = JointTrajectory()
