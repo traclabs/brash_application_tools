@@ -54,7 +54,7 @@ setup(
                     'ground_twist_odom_convert = brash_application_tools.ground_twist_odom_convert:main',
                     'flight_twist_odom_convert = brash_application_tools.flight_twist_odom_convert:main',
                     'joint_state_convert = brash_application_tools.joint_state_convert:main',
-                                        
+                    'canadarm_control_node = brash_application_tools.canadarm_control_node:main'              
             ],
     },
 )
