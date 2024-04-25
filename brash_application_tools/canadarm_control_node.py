@@ -23,24 +23,31 @@ class SendMotionCommand(Node):
         self._subscribe_js = self.create_subscription(JointState, "/joint_states", self.js_cb, 10)
         
         self._joint_names = ["Base_Joint", "Shoulder_Roll", "Shoulder_Yaw", "Elbow_Pitch", "Wrist_Pitch", "Wrist_Yaw", "Wrist_Roll"]
-        self._js = [0, 0, 0, 0, 0, 0, 0]
+        self._js = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self._is_robot_moving = False
 
     def js_cb(self, msg):
-        self._js = msg.position
+        self._js = [] 
         
+        for item in msg.position:
+          self._js.append(float(item))
+    
+        print("Js:")
+        print(self._js)
         st = CanadarmAppRobotStatet()
         st.cmd_header.sec.function_code = 1
         st.state.joints = self._js
-        st.state.is_robot_moving = self._is_robot_moving
-        self._publish_state(st)
+        st.is_robot_moving = self._is_robot_moving
+        self._publish_state.publish(st)
 
     def command_cb(self, msg):
-        self.get_logger().info('Got command: "%s"' % msg.data)
+        self.get_logger().info("Got command for canadarm in flight side!!!!!!!!!!!!!!!!!!!!")
         send_goal(msg.goal.joints)
 
     def send_goal(self, joint_values):
-    
+        print("Joint values:")
+        print(joint_values)
+        print("Good..")   
         goal_msg = FollowJointTrajectory.Goal()
         
         traj = JointTrajectory()
@@ -101,7 +108,6 @@ def main(args=None):
     rclpy.init(args=args)
  
     action_client = SendMotionCommand()
-    action_client.send_goal(0)
     rclpy.spin(action_client)
     
 if __name__ == '__main__':
