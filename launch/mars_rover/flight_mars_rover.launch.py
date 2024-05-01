@@ -5,6 +5,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 ARGUMENTS = [
     DeclareLaunchArgument('twist_out_cfs', default_value='rover_app_send_robot_command',
@@ -43,9 +44,27 @@ def generate_launch_description():
             {"twist_out": LaunchConfiguration('twist_out')} 
           ]) 
           
+  save_image = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource([
+          PathJoinSubstitution([
+              FindPackageShare('brash_application_tools'), 
+              'launch', 'save_image_from_topic.launch.py'
+          ])
+      ]),
+      launch_arguments = {
+            'image_topic': '/image_raw',
+            'image_folder': '/code/brash/cfdp/rosfsw',
+            'image_name':  "rover_image.png",
+            'image_size': '100',
+            'timer_dt': '5.0'           
+      }.items(),              
+  )
+            
+          
   ld = LaunchDescription(ARGUMENTS)
   ld.add_action(launch_mars_rover)
   ld.add_action(toc_convert)
+  ld.add_action(save_image)
   return ld
   
 
