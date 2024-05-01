@@ -12,42 +12,47 @@ import xacro
 #####################################
 def generate_launch_description():
 
-  # rqt node - Send twist commands
-  rqt_node = ExecuteProcess(
-    cmd = ['rqt', '--perspective-file', os.path.join(get_package_share_directory("brash_application_tools"), "config", "canadarm", "canadarm_app.perspective")],
-    shell = True
-    )
+  # Robot description for the arm
+  simulation_models_path = get_package_share_directory('simulation')
+  urdf_model_path = os.path.join(simulation_models_path, 'models', 'canadarm', 'urdf', 'SSRMS_Canadarm2.urdf.xacro')
+  doc = xacro.process_file(urdf_model_path, mappings={'xyz' : '1.0 0.0 1.5', 'rpy': '3.1416 0.0 0.0'})
 
-  # Rviz visualization of odometry
-  #rviz_base = os.path.join(get_package_share_directory("brash_application_tools"), "rviz")
-  #rviz_full_config = os.path.join(rviz_base, "rover_husky.rviz")
-  #rviz_node = Node(
-  #      package="rviz2",
-  #      executable="rviz2",
-  #      name="rviz2",
-  #      output="screen",
-  #      arguments=["-d", rviz_full_config]
-  #)
 
-  # Start the twist_odom_converter
-  #launch_to_converter = IncludeLaunchDescription(
-  #    PythonLaunchDescriptionSource([
-  #        PathJoinSubstitution([
-  #            FindPackageShare('brash_application_tools'), 
-  #            'launch', 'ground_twist_odom_convert.launch.py'
-  #        ])
-  #    ]),
-  #    launch_arguments = {
-  #          'odom_out': '/odom',
-  #          'twist_in': '/cmd_vel'          
-  #    }.items(),              
-  #)
+  # Rviz visualization of arm
+  rviz_base = os.path.join(get_package_share_directory("brash_application_tools"), "rviz")
+  rviz_full_config = os.path.join(rviz_base, "canadarm.rviz")
+  rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=["-d", rviz_full_config]
+  )
+
+
+  rsp = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[
+          {'robot_description': doc.toxml()}
+        ],
+      )
+
+  # Start the joint_converter
+  hk_node = Node(
+        package="brash_application_tools",
+        executable="canadarm_hk_joint_state_convert",
+        name="canadarm_hk_joint_state_convert",
+        output="screen"
+  )
   
 
   return LaunchDescription(
       [
-       rqt_node,
-#       rviz_node,
-#       launch_to_converter,
+       rviz_node,
+       hk_node,
+       rsp
       ]
   )
