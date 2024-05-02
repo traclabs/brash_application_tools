@@ -34,7 +34,7 @@ def generate_launch_description():
 
   toc_convert = Node(
           package='brash_application_tools',
-          executable='flight_twist_odom_convert',
+          executable='flight_twist_odom_convert.py',
           name='flight_twist_odom_convert',
           output='screen',
           parameters=[

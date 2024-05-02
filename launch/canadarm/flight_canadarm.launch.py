@@ -22,7 +22,7 @@ def generate_launch_description():
   # Launch action node
   canadarm_control = Node(
           package='brash_application_tools',
-          executable='canadarm_control_node',
+          executable='canadarm_control_node.py',
           name='canadarm_control_node',
           output='screen',
           ) 

@@ -19,7 +19,7 @@ def generate_launch_description():
 
   save_image = Node(
           package='brash_application_tools',
-          executable='save_image_from_topic',
+          executable='save_image_from_topic.py',
           name='save_image_from_topic',
           output='screen',
           parameters=[

@@ -48,7 +48,7 @@ def generate_launch_description():
   # Start the joint state converter
   js_converter = Node(
           package='brash_application_tools',
-          executable='joint_state_convert',
+          executable='joint_state_convert.py',
           name='joint_state_convert',
           output='screen',
           parameters=[

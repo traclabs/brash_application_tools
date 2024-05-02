@@ -43,11 +43,23 @@ def generate_launch_description():
       }.items(),              
   )
   
+  # rosbridge_server for openmct
+  bridge_server = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+          PathJoinSubstitution(
+        [get_package_share_directory("brash_application_tools"), 'launch', 'rosbridge_websocket.launch.py'])
+        ]),
+        launch_arguments = {
+          'port': '9080',
+          'address': '10.5.0.2'          
+        }.items()
+    )
 
   return LaunchDescription(
       [
        rqt_node,
        rviz_node,
        launch_to_converter,
+       bridge_server
       ]
   )

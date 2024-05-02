@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 
@@ -51,9 +53,8 @@ class TwistOdomConverter(Node):
 
 
     def cfs_callback(self, msg):
-        self.get_logger().info('Received new cFS odom telemetry', throttle_duration_sec=1.0)
-        # self.get_logger().info(str(msg))
-        # print(msg)
+        #self.get_logger().info('Received new cFS odom telemetry', throttle_duration_sec=5.0)
+
         odom = Odometry()
         odom.header.stamp = self.get_clock().now().to_msg()
         odom.header.frame_id = "world"
@@ -69,8 +70,7 @@ class TwistOdomConverter(Node):
         self.odom_publisher.publish(odom)
 
     def twist_callback(self, msg):
-        self.get_logger().info('Received new twist command to send as cFS RoverAppTwist command', throttle_duration_sec=1.0)
-        # self.get_logger().info(str(msg))
+        #self.get_logger().info('Received new twist command to send as cFS RoverAppTwist command', throttle_duration_sec=5.0)
 
         cmd = RoverAppTwistCmdt()
         cmd.cmd_header.sec.function_code = 1 # CC code. 1 = Command. 0 = Noop

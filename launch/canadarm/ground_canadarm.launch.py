@@ -43,7 +43,7 @@ def generate_launch_description():
   # Start the joint_converter
   hk_node = Node(
         package="brash_application_tools",
-        executable="canadarm_hk_joint_state_convert",
+        executable="canadarm_hk_joint_state_convert.py",
         name="canadarm_hk_joint_state_convert",
         output="screen"
   )
@@ -52,7 +52,7 @@ def generate_launch_description():
   bridge_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
           PathJoinSubstitution(
-        [get_package_share_directory("rosbridge_server"), 'launch', 'rosbridge_websocket.launch.py'])
+        [get_package_share_directory("brash_application_tools"), 'launch', 'rosbridge_websocket.launch.py'])
         ]),
         launch_arguments = {
           'port': '9080',

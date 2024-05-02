@@ -21,7 +21,7 @@ def generate_launch_description():
 
   toc_convert = Node(
           package='brash_application_tools',
-          executable='ground_twist_odom_convert',
+          executable='ground_twist_odom_convert.py',
           name='ground_twist_odom_convert',
           output='screen',
           parameters=[
