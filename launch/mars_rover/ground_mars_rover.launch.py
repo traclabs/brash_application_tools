@@ -54,12 +54,19 @@ def generate_launch_description():
           'address': '10.5.0.2'          
         }.items()
     )
+    
+  # Run openmct
+  openmct_node = ExecuteProcess( 
+    cmd = ['npm', 'start', '--prefix', "/code/openmct_ros"],
+    shell = True
+    )  
 
   return LaunchDescription(
       [
        rqt_node,
        rviz_node,
        launch_to_converter,
-       bridge_server
+       bridge_server,
+       openmct_node
       ]
   )
