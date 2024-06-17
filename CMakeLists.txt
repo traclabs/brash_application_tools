@@ -16,7 +16,8 @@ rviz_common
 rviz_rendering
 sensor_msgs
 cfe_msgs
-cfdp_msgs)
+cfdp_msgs
+ff_msgs)
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
@@ -29,6 +30,7 @@ find_package(rviz_common REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(cfe_msgs REQUIRED)
 find_package(cfdp_msgs REQUIRED)
+find_package(ff_msgs REQUIRED)
 
 ## This setting causes Qt's "MOC" generation to happen automatically.
 set(CMAKE_AUTOMOC ON)
@@ -71,6 +73,9 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/ground_twist_odom_convert.py
   scripts/flight_twist_odom_convert.py
+  scripts/astrobee_cmd_pose_convert.py
+  scripts/astrobee_cfs_undock.py
+  scripts/astrobee_cfs_move.py
   scripts/canadarm_send_command.py
   scripts/canadarm_hk_joint_state_convert.py
   scripts/canadarm_control_node.py

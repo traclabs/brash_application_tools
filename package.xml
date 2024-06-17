@@ -28,7 +28,7 @@
   <exec_depend>libqt5-core</exec_depend>
   <exec_depend>libqt5-gui</exec_depend>
   <exec_depend>libqt5-widgets</exec_depend>
-
+  <exec_depend>ff_msgs</exec_depend>
 
 
   <test_depend>ament_copyright</test_depend>
