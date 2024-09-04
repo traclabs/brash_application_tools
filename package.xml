@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>brash_applications_tools</name>
+  <name>brash_application_tools</name>
   <version>0.0.1</version>
   <description>A number of demos for BRASH</description>
   <maintainer email="ana@traclabs.com">Ana C. Huaman Quispe</maintainer>
