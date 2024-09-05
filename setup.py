@@ -55,7 +55,8 @@ setup(
                     'flight_twist_odom_convert = brash_application_tools.flight_twist_odom_convert:main',
                     'joint_state_convert = brash_application_tools.joint_state_convert:main',
                     'canadarm_control_node = brash_application_tools.canadarm_control_node:main',
-                    'canadarm_send_command = brash_application_tools.canadarm_send_command:main'              
+                    'canadarm_send_command = brash_application_tools.canadarm_send_command:main',
+                    'simple_robot_app_test = brash_application_tools.simple_robot_app_test_node:main'              
             ],
     },
 )
