@@ -56,7 +56,8 @@ setup(
                     'joint_state_convert = brash_application_tools.joint_state_convert:main',
                     'canadarm_control_node = brash_application_tools.canadarm_control_node:main',
                     'canadarm_send_command = brash_application_tools.canadarm_send_command:main',
-                    'simple_robot_app_test = brash_application_tools.simple_robot_app_test_node:main'              
+                    'simple_robot_app_ground = brash_application_tools.simple_robot_app_ground_node:main',
+                    'simple_robot_app_flight = brash_application_tools.simple_robot_app_flight_node:main'                                  
             ],
     },
 )
